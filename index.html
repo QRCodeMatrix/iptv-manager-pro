@@ -5,95 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Manager Pro</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            text-align: center;
-        }
-        h1 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-        }
-        p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            font-size: 1.1em;
-        }
-        .features {
-            text-align: left;
-            margin: 30px 0;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .features li {
-            list-style: none;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        .features li:last-child {
-            border-bottom: none;
-        }
-        .features li:before {
-            content: "✓ ";
-            color: #667eea;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .btn {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin-top: 20px;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-        .btn:hover {
-            background: #764ba2;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #eee; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: #0f3460; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center; }
+        h1 { color: #00d4ff; margin-bottom: 10px; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: #16213e; padding: 20px; border-radius: 8px; border-left: 4px solid #00d4ff; }
+        .card h2 { font-size: 14px; color: #aaa; margin-bottom: 10px; }
+        .card .number { font-size: 32px; color: #00d4ff; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; background: #16213e; border-radius: 8px; overflow: hidden; }
+        th { background: #0f3460; padding: 15px; text-align: left; color: #00d4ff; }
+        td { padding: 15px; border-bottom: 1px solid #0f3460; }
+        tr:hover { background: #1a1a2e; }
+        .btn { background: #00d4ff; color: #000; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
+        .btn:hover { background: #00a8cc; }
+        .status { padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .status.ativo { background: #28a745; color: white; }
+        .status.expiring { background: #ffc107; color: black; }
+        .status.expired { background: #dc3545; color: white; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #16213e; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%; }
+        .modal-content h2 { margin-bottom: 20px; color: #00d4ff; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #0f3460; border: 1px solid #00d4ff; color: #eee; border-radius: 4px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>IPTV Manager Pro</h1>
-        <p>Painel completo de gerenciamento de clientes IPTV com rastreamento de vencimento, status em tempo real e assistente de renovação com IA.</p>
-        
-        <div class="features">
-            <ul>
-                <li>Gerenciamento completo de clientes IPTV</li>
-                <li>Rastreamento automático de vencimentos</li>
-                <li>Status em tempo real</li>
-                <li>Assistente de renovação com IA (Gemini)</li>
-                <li>Interface moderna e responsiva</li>
-            </ul>
+        <header>
+            <h1>📱 IPTV Manager Pro</h1>
+            <p>Painel de Gerenciamento de Clientes IPTV</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2>Total de Clientes</h2>
+                <div class="number" id="total">0</div>
+            </div>
+            <div class="card">
+                <h2>Clientes Ativos</h2>
+                <div class="number" id="ativo">0</div>
+            </div>
+            <div class="card">
+                <h2>Vencendo em Breve</h2>
+                <div class="number" id="expiring">0</div>
+            </div>
+            <div class="card">
+                <h2>Vencidos</h2>
+                <div class="number" id="expired">0</div>
+            </div>
         </div>
-        
-        <p><strong>Status:</strong> 🚀 Projeto em desenvolvimento</p>
-        <button class="btn">Começar Agora</button>
+
+        <div style="margin-bottom: 20px;">
+            <button class="btn" onclick="abrirModal()">➕ Novo Cliente</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Plano</th>
+                    <th>Vencimento</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="clientesTable">
+            </tbody>
+        </table>
     </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>Novo Cliente</h2>
+            <input type="text" id="nome" placeholder="Nome do cliente">
+            <input type="text" id="telefone" placeholder="Telefone">
+            <input type="text" id="plano" placeholder="Plano (ex: Mensal 4K)">
+            <input type="date" id="vencimento">
+            <button class="btn" onclick="salvarCliente()" style="width: 100%;">Salvar Cliente</button>
+            <button class="btn" onclick="fecharModal()" style="width: 100%; background: #666;">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [
+            { id: 1, nome: 'Roberto Santos', telefone: '11999999999', plano: 'Mensal 4K', vencimento: '2025-12-20' },
+            { id: 2, nome: 'Maria Oliveira', telefone: '21988888888', plano: 'Trimestral', vencimento: '2025-12-11' },
+            { id: 3, nome: 'Carlos Lima', telefone: '31977777777', plano: 'Mensal SD', vencimento: '2025-12-14' }
+        ];
+
+        function abrirModal() { document.getElementById('modal').classList.add('active'); }
+        function fecharModal() { document.getElementById('modal').classList.remove('active'); }
+
+        function salvarCliente() {
+            const nome = document.getElementById('nome').value;
+            const telefone = document.getElementById('telefone').value;
+            const plano = document.getElementById('plano').value;
+            const vencimento = document.getElementById('vencimento').value;
+            
+            if (!nome || !telefone || !plano || !vencimento) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+            
+            clientes.push({
+                id: Date.now(),
+                nome,
+                telefone,
+                plano,
+                vencimento
+            });
+            
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            document.getElementById('nome').value = '';
+            document.getElementById('telefone').value = '';
+            document.getElementById('plano').value = '';
+            document.getElementById('vencimento').value = '';
+            fecharModal();
+            renderizar();
+        }
+
+        function removerCliente(id) {
+            clientes = clientes.filter(c => c.id !== id);
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            renderizar();
+        }
+
+        function getStatus(data) {
+            const hoje = new Date();
+            const vencimento = new Date(data + 'T00:00:00');
+            const dias = Math.ceil((vencimento - hoje) / (1000 * 60 * 60 * 24));
+            if (dias < 0) return { classe: 'expired', texto: 'Vencido' };
+            if (dias <= 3) return { classe: 'expiring', texto: `Vence em ${dias}d` };
+            return { classe: 'ativo', texto: 'Ativo' };
+        }
+
+        function renderizar() {
+            let ativo = 0, expiring = 0, expired = 0;
+            let html = '';
+            
+            clientes.forEach(c => {
+                const status = getStatus(c.vencimento);
+                if (status.classe === 'ativo') ativo++;
+                if (status.classe === 'expiring') expiring++;
+                if (status.classe === 'expired') expired++;
+                
+                html += `<tr>
+                    <td>${c.nome}</td>
+                    <td>${c.telefone}</td>
+                    <td>${c.plano}</td>
+                    <td>${new Date(c.vencimento + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                    <td><span class="status ${status.classe}">${status.texto}</span></td>
+                    <td><button class="btn" onclick="removerCliente(${c.id})">❌ Remover</button></td>
+                </tr>`;
+            });
+            
+            document.getElementById('clientesTable').innerHTML = html;
+            document.getElementById('total').textContent = clientes.length;
+            document.getElementById('ativo').textContent = ativo;
+            document.getElementById('expiring').textContent = expiring;
+            document.getElementById('expired').textContent = expired;
+        }
+
+        renderizar();
+    </script>
 </body>
 </html>
